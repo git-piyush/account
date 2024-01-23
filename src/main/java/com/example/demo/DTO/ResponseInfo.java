@@ -11,6 +11,8 @@ import lombok.Setter;
 @Setter
 public class ResponseInfo {
 
+	private String status;
+	
 	private String message;
 	
 }

@@ -12,11 +12,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.DTO.AccountDTO;
 import com.example.demo.DTO.AllAccountDTO;
 import com.example.demo.DTO.ResponseInfo;
 import com.example.demo.service.AccountService;
+import com.example.demo.utils.AppConstants;
 
 @RequestMapping("/ui/account")
 @Controller
@@ -43,13 +45,18 @@ public class AccountControllerUI {
 	}
 	
 	@GetMapping("/getAllAccountUI")
-	public String getAllAccountUI(Model model){
+	public String getAllAccountUI(Model model,
+			@RequestParam(value="pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NO, required = false) int pageNo,
+			@RequestParam(value="pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+			@RequestParam(value="sortBy", defaultValue = AppConstants.DEFAULT_PAGE_SORT_BY, required = false) String sortBy,
+			@RequestParam(value="ascDir", defaultValue = AppConstants.DEFAULT_PAGE_SORT_DIR, required = false) String ascDir
+			){
 		System.out.println("getAllAccountUI");
 		ResponseInfo info = new ResponseInfo();
 		AllAccountDTO result = new AllAccountDTO();
 		try {
-			List<AccountDTO> bankAccounts = accountService.getAllAccount();
-			model.addAttribute("accountList", bankAccounts);
+			AllAccountDTO bankAccounts = accountService.getAllAccount(pageNo, pageSize, sortBy, ascDir);
+			model.addAttribute("accountList", bankAccounts.getAccountList());
 		} catch (Exception e) {
 			info.setMessage(e.getMessage());
 			result.setInfo(info);
