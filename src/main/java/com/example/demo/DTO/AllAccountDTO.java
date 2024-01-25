@@ -20,6 +20,8 @@ public class AllAccountDTO {
 	private long totalElements;
 
 	private int totalPages;
+	
+	private int number;
 
 	private boolean last;
 	

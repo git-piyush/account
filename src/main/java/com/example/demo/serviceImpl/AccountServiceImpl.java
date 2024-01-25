@@ -53,6 +53,7 @@ public class AccountServiceImpl implements AccountService {
 			allAccountDTO.setTotalElements(allAccount.getTotalElements());
 			allAccountDTO.setTotalPages(allAccount.getTotalPages());
 			allAccountDTO.setLast(allAccount.isLast());
+			allAccountDTO.setNumber(allAccount.getNumber());
 			return allAccountDTO;
 		}
 		

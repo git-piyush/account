@@ -3,8 +3,6 @@ package com.example.demo.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,12 +49,17 @@ public class AccountControllerUI {
 			@RequestParam(value="sortBy", defaultValue = AppConstants.DEFAULT_PAGE_SORT_BY, required = false) String sortBy,
 			@RequestParam(value="ascDir", defaultValue = AppConstants.DEFAULT_PAGE_SORT_DIR, required = false) String ascDir
 			){
-		System.out.println("getAllAccountUI");
 		ResponseInfo info = new ResponseInfo();
 		AllAccountDTO result = new AllAccountDTO();
 		try {
 			AllAccountDTO bankAccounts = accountService.getAllAccount(pageNo, pageSize, sortBy, ascDir);
 			model.addAttribute("accountList", bankAccounts.getAccountList());
+			model.addAttribute("currentPage", bankAccounts.getPageNo());
+			model.addAttribute("totalPages", bankAccounts.getTotalPages());
+			model.addAttribute("sortField", sortBy);
+			model.addAttribute("sortOrder", ascDir);
+			model.addAttribute("number", bankAccounts.getNumber());
+			model.addAttribute("size", bankAccounts.getAccountList().size());
 		} catch (Exception e) {
 			info.setMessage(e.getMessage());
 			result.setInfo(info);

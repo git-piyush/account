@@ -21,11 +21,19 @@ import com.example.demo.utils.AppConstants;
 
 import jakarta.validation.Valid;
 
+//@Controller: Primarily for traditional Spring MVC applications where methods return view names.
+
+//@RestController: Designed for RESTful services; methods return data directly to the client. 
 @RestController
 @RequestMapping("/api/account")
 public class AccountController {
 	
 	@Autowired
+	/*
+	 * The @Autowired annotation is used to inject the bean automatically.
+	 * The @Autowired annotation is used in Constructor injection, Setter injection,
+	 * and Field injection.
+	 */
 	AccountService accountService;
 
 	@PostMapping("/accountAPI")
@@ -64,5 +72,38 @@ public class AccountController {
 		}
 		return new ResponseEntity<AllAccountDTO>(result, HttpStatus.OK);
 	}
+	
+	/*
+	 * Usage
+	 * 
+	 * @PathVariable: Extracts values from the URI path.
+	 * 
+	 * @RequestParam: Extracts values from query parameters. 
+	 * 
+	 * 
+	 * URL Example
+	 * 
+	 * @PathVariable: /books/{id} -> /books/5
+	 * 
+	 * @RequestParam: /books?bookId=5
+	 * 
+	 * Optional Values
+	 * 
+	 * @PathVariable: Assumes values are present (though you can set it as
+	 * optional).
+	 * 
+	 * @RequestParam: This can be optional or required. Default Values
+	 * 
+	 * @PathVariable: Does not support default values.
+	 * 
+	 * @RequestParam: Supports default values using the defaultValue attribute. Use
+	 * Case
+	 * 
+	 * @PathVariable: Suited for RESTful web services, where the URI is used to
+	 * indicate resource hierarchy.
+	 * 
+	 * @RequestParam: Commonly used in form submissions and traditional web
+	 * applications.
+	 */
 	
 }
