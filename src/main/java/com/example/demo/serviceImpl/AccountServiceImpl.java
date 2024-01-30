@@ -1,6 +1,8 @@
 package com.example.demo.serviceImpl;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -70,6 +72,30 @@ public class AccountServiceImpl implements AccountService {
 		AccountDTO accDTO = mapper.map(account, AccountDTO.class);
 		System.out.println(fun.apply(accDTO));
 		return accDTO;
+	}
+
+	@Override
+	public AccountDTO getAccountById(Long accountId) {
+		List<Account> accList = new ArrayList<>();
+		Account account = accountRepo.findById(accountId).get();
+		accList.add(account);
+		return accList.stream().map((acc)-> new AccountDTO(acc.getAccNo(), acc.getAccHolderName(), acc.getAadhar())).collect(Collectors.toList()).get(0);
+	}
+
+	@Override
+	public AccountDTO updateAccountById(AccountDTO accountDTO) {
+		List<AccountDTO> accDtoList = new ArrayList<>();
+		accDtoList.add(accountDTO);
+		
+		Account account = accDtoList.stream().map((acc)-> new Account(acc.getAccNo(), acc.getAccHolderName(), acc.getAadhar())).collect(Collectors.toList()).get(0);
+		accountRepo.save(account);
+		return accountDTO;
+	}
+
+	@Override
+	public String deleteAccountById(Long accountId) {
+		accountRepo.deleteById(accountId);
+		return "Account has been Deleted Successfully";
 	}
 
 }

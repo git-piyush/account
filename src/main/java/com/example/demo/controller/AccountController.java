@@ -5,8 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -104,5 +107,28 @@ public class AccountController {
 	 * @RequestParam: Commonly used in form submissions and traditional web
 	 * applications.
 	 */
+	@GetMapping("/getAccount/{accountId}")
+	public ResponseEntity<AccountDTO> getAccountById(@PathVariable Long accountId){
+		
+		AccountDTO accDTO = accountService.getAccountById(accountId);
+		return new ResponseEntity<AccountDTO>(accDTO, HttpStatus.OK);
+		
+	}
+	
+	@DeleteMapping("/deleteAccount/{accountId}")
+	public ResponseEntity<String> deleteAccountById(@PathVariable Long accountId){
+		
+		String msg = accountService.deleteAccountById(accountId);
+		return new ResponseEntity<String>(msg, HttpStatus.OK);
+		
+	}
+	
+	@PutMapping("/updateAccount")
+	public ResponseEntity<AccountDTO> updateAccount(@RequestBody AccountDTO accountDTO){
+		
+		AccountDTO accDTO = accountService.updateAccountById(accountDTO);
+		return new ResponseEntity<AccountDTO>(accDTO, HttpStatus.OK);
+		
+	}
 	
 }
