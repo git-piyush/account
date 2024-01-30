@@ -47,8 +47,13 @@ public class DiffBwSpringAndSpringboot {
 		  monitor and manage production applications. 
 	 *
 	 *
-	 *
+	 *5. Deployment
+			Spring: Generates WAR/EAR files typically deployed to external application servers.
+
+			Spring Boot: Typically generates standalone JAR with embedded servers for simplified 
+			deployment.
 	 */
+	
 	
 	
 }

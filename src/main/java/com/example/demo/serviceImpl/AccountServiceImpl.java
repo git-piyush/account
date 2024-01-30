@@ -1,7 +1,7 @@
 package com.example.demo.serviceImpl;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -18,6 +18,8 @@ import com.example.demo.entity.Account;
 import com.example.demo.repo.AccountRepo;
 import com.example.demo.service.AccountService;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class AccountServiceImpl implements AccountService {
 	
@@ -27,15 +29,16 @@ public class AccountServiceImpl implements AccountService {
 	@Autowired
 	private ModelMapper mapper;
 
+	@Transactional
 	@Override
 	public void createAccount(AccountDTO accountDTO) {
 		Account account = new Account();
 		account.setAccHolderName(accountDTO.getAccHolderName());
 		account.setAadhar(accountDTO.getAadhar());
 		accountRepo.save(account);
-
 	}
 
+	@Transactional
 	@Override
 	public AllAccountDTO getAllAccount(int pageNo, int pageSize, String sortBy, String ascDir) {
 			
@@ -63,7 +66,9 @@ public class AccountServiceImpl implements AccountService {
 	//convert Post Entity to postResponseDTO
 	private AccountDTO mapAccountToAccountDTO(Account account) {
 		
+		Function<AccountDTO, Long> fun = (AccountDTO accDTO) -> accDTO.getAccNo();
 		AccountDTO accDTO = mapper.map(account, AccountDTO.class);
+		System.out.println(fun.apply(accDTO));
 		return accDTO;
 	}
 

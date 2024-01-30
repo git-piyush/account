@@ -15,10 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.DTO.AccountDTO;
 import com.example.demo.DTO.AllAccountDTO;
 import com.example.demo.DTO.ResponseInfo;
-import com.example.demo.entity.Account;
 import com.example.demo.service.AccountService;
 import com.example.demo.utils.AppConstants;
-
 import jakarta.validation.Valid;
 
 //@Controller: Primarily for traditional Spring MVC applications where methods return view names.
@@ -36,6 +34,7 @@ public class AccountController {
 	 */
 	AccountService accountService;
 
+	
 	@PostMapping("/accountAPI")
 	public ResponseEntity<ResponseInfo> createAccount(@Valid @RequestBody AccountDTO accountDTO){
 		ResponseInfo info = new ResponseInfo();
