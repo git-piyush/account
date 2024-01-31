@@ -102,6 +102,41 @@ public class DemoApplication {
 	
 	//By default, a Spring Bean is initialized as a singleton scope.
 	
+	/*
+	 * Why Spring Boot over Spring? Below are some key points which spring boot
+	 * offers but spring doesn’t:
+	 * 
+	 * Starter POM. 
+	 * Version Management. 
+	 * Auto Configuration. 
+	 * Component Scanning.
+	 * Embedded server. 
+	 * InMemory DB. 
+	 * Actuators Spring Boot simplifies the spring
+	 * feature for the user:
+	 */
+	
+	//What are the most common Spring Boot CLI commands?
+	//-run, -test, -grap, -jar, -war, -install, -uninstall, --init, -shell, -help.
+	
+	/* What are the actuator-provided endpoints used for monitoring the Spring boot application?
+			 Actuators provide below pre-defined endpoints to monitor our application -
+
+			 Health
+			 Info
+			 Beans
+			 Mappings
+			 Configprops
+			 Httptrace
+			 Heapdump
+			 Threaddump
+			 Shutdown
+	*/
+	
+	
+	
+	
+	
 	
 	
 	

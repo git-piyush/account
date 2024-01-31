@@ -2,10 +2,9 @@ package com.example.demo.entity;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import java.util.ArrayList;
-import java.util.List;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,32 +17,34 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Entity
-@Table(name="TBL_ACCOUNT", uniqueConstraints = {@UniqueConstraint(columnNames = {"aadharNo"})})
-public class Account {
+@Table(name="TBL_APPLICANT")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+public class Applicant {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="accno")
-	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-	private Long accNo;
+	private Long applicantId;
 	
-	@Column(name="name")
-	private String accHolderName;
+	@Column(name="age")
+	private int age;
 	
-	@Column(name="aadharNo")
-	private Long aadhar;
+	@Column(name="dob")
+	private Date dob;
+	
+	@JsonIgnoreProperties("applicant")
+	@OneToOne(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name="accno")
+	private Account account;
 	
 	@Column(name="createdBy")
 	private String createdBy;
@@ -57,11 +58,6 @@ public class Account {
 	@Column(name="modifiedDate")
 	private Date modifiedDate;
 	
-	@JsonManagedReference
-	@JsonIgnoreProperties("account")
-	@OneToOne(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Applicant applicant;
-	
 	@PreUpdate
 	@PrePersist
 	public void updateTimeStamps()
@@ -74,12 +70,6 @@ public class Account {
 			this.createdDate = date;
 			this.createdBy = userId;
 		}
-	}
-
-	public Account(Long accNo2, String accHolderName2, Long aadhar2) {
-		this.aadhar = aadhar2;
-		this.accNo= accNo2;
-		this.accHolderName = accHolderName2;
 	}
 	
 }

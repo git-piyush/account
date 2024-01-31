@@ -1,8 +1,7 @@
 package com.example.demo.controller;
 
-import java.sql.SQLException;
-import java.util.List;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -32,6 +31,8 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/account")
 public class AccountController {
 	
+	private static Logger log = LoggerFactory.getLogger(AccountController.class);
+
 	@Autowired
 	/*
 	 * The @Autowired annotation is used to inject the bean automatically.
@@ -41,7 +42,7 @@ public class AccountController {
 	AccountService accountService;
 
 	
-	@PostMapping("/accountAPI")
+	@PostMapping("/createAccountAPI")
 	public ResponseEntity<ResponseInfo> createAccount(@Valid @RequestBody AccountDTO accountDTO){
 		ResponseInfo info = new ResponseInfo();
 		try {
@@ -66,6 +67,7 @@ public class AccountController {
 		ResponseInfo info = new ResponseInfo();
 		AllAccountDTO result = new AllAccountDTO();
 		try {
+			log.debug("Inside getAllAccount method");
 			result = accountService.getAllAccount(pageNo, pageSize, sortBy, ascDir);
 			info.setStatus("Success");
 			info.setMessage("Account details has been fetched successfully.");
