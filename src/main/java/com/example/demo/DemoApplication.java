@@ -28,10 +28,10 @@ import org.springframework.context.annotation.Bean;
  */
 //@Configuration
 /*
- * Use @Configuration annotation on top of any class to declare that this class
- * provides one or more @Bean methods and may be processed by the Spring
- * container to generate bean definitions and service requests for those beans
- * at runtime.
+ * Spring @Configuration annotation is part of the spring core framework. Spring
+ * Configuration annotation indicates that the class has @Bean definition
+ * methods. So Spring container can process the class and generate Spring Beans
+ * to be used in the application.
  */
 public class DemoApplication {
 	

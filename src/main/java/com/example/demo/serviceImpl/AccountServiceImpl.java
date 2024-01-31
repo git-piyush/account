@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import com.example.demo.DTO.AccountDTO;
 import com.example.demo.DTO.AllAccountDTO;
 import com.example.demo.entity.Account;
+import com.example.demo.exception.AccountAppException;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repo.AccountRepo;
 import com.example.demo.service.AccountService;
 
@@ -60,9 +62,9 @@ public class AccountServiceImpl implements AccountService {
 			allAccountDTO.setLast(allAccount.isLast());
 			allAccountDTO.setNumber(allAccount.getNumber());
 			return allAccountDTO;
+		}else {
+			throw new ResourceNotFoundException("No DATA Available.");
 		}
-		
-	        return new AllAccountDTO();
 	}
 	
 	//convert Post Entity to postResponseDTO
@@ -74,27 +76,38 @@ public class AccountServiceImpl implements AccountService {
 		return accDTO;
 	}
 
+	@Transactional
 	@Override
 	public AccountDTO getAccountById(Long accountId) {
 		List<Account> accList = new ArrayList<>();
-		Account account = accountRepo.findById(accountId).get();
+		Account account = accountRepo.findById(accountId).orElseThrow(()->new ResourceNotFoundException("Account","Account id",accountId));
 		accList.add(account);
 		return accList.stream().map((acc)-> new AccountDTO(acc.getAccNo(), acc.getAccHolderName(), acc.getAadhar())).collect(Collectors.toList()).get(0);
 	}
 
+	@Transactional
 	@Override
 	public AccountDTO updateAccountById(AccountDTO accountDTO) {
 		List<AccountDTO> accDtoList = new ArrayList<>();
 		accDtoList.add(accountDTO);
-		
+		Account accountDB = accountRepo.findById(accountDTO.getAccNo()).orElseThrow(()->new ResourceNotFoundException("Account","Account id",accountDTO.getAccNo()));
 		Account account = accDtoList.stream().map((acc)-> new Account(acc.getAccNo(), acc.getAccHolderName(), acc.getAadhar())).collect(Collectors.toList()).get(0);
 		accountRepo.save(account);
 		return accountDTO;
 	}
 
+	@Transactional
 	@Override
 	public String deleteAccountById(Long accountId) {
-		accountRepo.deleteById(accountId);
+		
+		Account account = accountRepo.findById(accountId).orElseThrow(()-> new ResourceNotFoundException("Account", "Account Id", accountId));
+		if(account !=null) {
+			try {
+				accountRepo.deleteById(accountId);
+			} catch (Exception e) {
+				throw new AccountAppException("System Error while deleting the account");
+			}
+		}
 		return "Account has been Deleted Successfully";
 	}
 

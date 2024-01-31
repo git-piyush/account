@@ -12,7 +12,7 @@ public class SpringBootKeyFeatures {
 	
 	/*
 	 * 1. Spring Boot Starters 
-	 * Starters are a set of opinionated dependencies that
+	 * Starters are nothing but packet of dependencies that
 	 * simplify dependency management. They encapsulate common configurations and
 	 * dependencies needed for specific functionalities, such as database
 	 * connectivity, security, web services, and more. Starters make it easy to add

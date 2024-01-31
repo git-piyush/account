@@ -1,8 +1,10 @@
 package com.example.demo.controller;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.DTO.AccountDTO;
 import com.example.demo.DTO.AllAccountDTO;
 import com.example.demo.DTO.ResponseInfo;
+import com.example.demo.exception.ApplicationSqlException;
 import com.example.demo.service.AccountService;
 import com.example.demo.utils.AppConstants;
 import jakarta.validation.Valid;
@@ -125,8 +128,13 @@ public class AccountController {
 	
 	@PutMapping("/updateAccount")
 	public ResponseEntity<AccountDTO> updateAccount(@RequestBody AccountDTO accountDTO){
-		
-		AccountDTO accDTO = accountService.updateAccountById(accountDTO);
+		AccountDTO accDTO = null;
+		try {
+			accDTO = accountService.updateAccountById(accountDTO);
+		} catch (DataIntegrityViolationException e) {
+			e.printStackTrace();
+			throw new ApplicationSqlException(e.getMessage());
+		}
 		return new ResponseEntity<AccountDTO>(accDTO, HttpStatus.OK);
 		
 	}
