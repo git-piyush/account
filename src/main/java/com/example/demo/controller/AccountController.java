@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.DTO.AccountDTO;
 import com.example.demo.DTO.AllAccountDTO;
+import com.example.demo.DTO.CreateAccountDTO;
 import com.example.demo.DTO.ResponseInfo;
+import com.example.demo.entity.Account;
 import com.example.demo.exception.ApplicationSqlException;
 import com.example.demo.service.AccountService;
 import com.example.demo.utils.AppConstants;
@@ -43,12 +45,12 @@ public class AccountController {
 
 	
 	@PostMapping("/createAccountAPI")
-	public ResponseEntity<ResponseInfo> createAccount(@Valid @RequestBody AccountDTO accountDTO){
+	public ResponseEntity<ResponseInfo> createAccount(@Valid @RequestBody CreateAccountDTO createAccountDTO){
 		ResponseInfo info = new ResponseInfo();
 		try {
-			accountService.createAccount(accountDTO);
+			AccountDTO newAccount = accountService.createAccount(createAccountDTO);
 			info.setStatus("Sucess");
-			info.setMessage("Account has been created successfully.");
+			info.setMessage("Account has been created successfully with Account No: "+newAccount.getAccNo());
 		} catch (Exception e) {
 			info.setStatus("Fail");
 			info.setMessage(e.getMessage());
@@ -128,11 +130,12 @@ public class AccountController {
 		
 	}
 	
-	@PutMapping("/updateAccount")
-	public ResponseEntity<AccountDTO> updateAccount(@RequestBody AccountDTO accountDTO){
+	@PutMapping("/updateAccount/{accountId}")
+	public ResponseEntity<AccountDTO> updateAccount(@RequestBody CreateAccountDTO createAccountDTO,
+			@PathVariable Long accountId){
 		AccountDTO accDTO = null;
 		try {
-			accDTO = accountService.updateAccountById(accountDTO);
+			accDTO = accountService.updateAccountById(createAccountDTO, accountId);
 		} catch (DataIntegrityViolationException e) {
 			e.printStackTrace();
 			throw new ApplicationSqlException(e.getMessage());

@@ -1,9 +1,15 @@
 package com.example.demo.serviceImpl;
 
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.DTO.ApplicantDTO;
+import com.example.demo.DTO.AccountDTO;
+import com.example.demo.DTO.ApplicantResponseDTO;
+import com.example.demo.DTO.CreateApplicantDTO;
 import com.example.demo.entity.Account;
 import com.example.demo.entity.Applicant;
 import com.example.demo.exception.ResourceNotFoundException;
@@ -21,13 +27,15 @@ public class ApplicantServiceImpl implements ApplicantService {
 	@Autowired
 	ApplicantRepo applicantRepo;
 	
+	@Autowired
+	private ModelMapper mapper;
+	
 	@Override
-	public Applicant createApplicant(Long accountId, ApplicantDTO applicantDTO) {
+	public Applicant createApplicant(Long accountId, CreateApplicantDTO createApplicantDTO) {
 		Account account = accountRepo.findById(accountId).orElseThrow(()->new ResourceNotFoundException("Account","Account Id",accountId));
-		
 		Applicant applicant = new Applicant();
-		applicant.setAge(applicantDTO.getAge());
-		applicant.setDob(applicantDTO.getDob());
+		applicant.setAge(createApplicantDTO.getAge());
+		applicant.setDob(createApplicantDTO.getDob());
 		Applicant applicantDb = null;
 		if(account!=null) {
 			applicant.setAccount(account);
@@ -38,11 +46,16 @@ public class ApplicantServiceImpl implements ApplicantService {
 	}
 
 	@Override
-	public Applicant getApplicant(Long applicantId) {
-		
+	public ApplicantResponseDTO getApplicant(Long applicantId) {
+		ApplicantResponseDTO accDTO = new ApplicantResponseDTO();
 		Applicant applicant = applicantRepo.findById(applicantId).orElseThrow(()->new ResourceNotFoundException("Applicant","Applicant Id",applicantId));
 		
-		return applicant;
+		accDTO = Stream.of(applicant).map((app)->new ApplicantResponseDTO(app.getApplicantId(), app.getAge(), app.getDob())).collect(Collectors.toList()).get(0);
+		Account account = applicant.getAccount();
+		AccountDTO res = Stream.of(account).map((acc)-> new AccountDTO(acc.getAccNo(), acc.getAccHolderName(), acc.getAadhar())).collect(Collectors.toList()).get(0);
+		
+		accDTO.setAccount(res);
+		return accDTO;
 	}
 
 }

@@ -7,11 +7,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor
 @Setter
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
-public class ApplicantDTO {
+public class CreateApplicantDTO {
+
 	private int age;
+	
 	private Date dob;
+	
 }

@@ -3,6 +3,7 @@ package com.example.demo.entity;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.CascadeType;
@@ -41,7 +42,7 @@ public class Applicant {
 	@Column(name="dob")
 	private Date dob;
 	
-	@JsonIgnoreProperties("applicant")
+	
 	@OneToOne(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name="accno")
 	private Account account;

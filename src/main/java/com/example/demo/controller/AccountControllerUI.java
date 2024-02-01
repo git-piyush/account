@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.DTO.AccountDTO;
 import com.example.demo.DTO.AllAccountDTO;
+import com.example.demo.DTO.CreateAccountDTO;
 import com.example.demo.DTO.ResponseInfo;
 import com.example.demo.service.AccountService;
 import com.example.demo.utils.AppConstants;
@@ -37,8 +38,8 @@ public class AccountControllerUI {
 	}
 	
 	@PostMapping("/createAccountUI")
-	public String createAccountUI(@ModelAttribute("accountDTO") AccountDTO accountDTO) {
-		accountService.createAccount(accountDTO);
+	public String createAccountUI(@ModelAttribute("accountDTO") CreateAccountDTO createAccountDTO) {
+		accountService.createAccount(createAccountDTO);
 		return "redirect:/ui/account/getAllAccountUI";
 	}
 	

@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.ArrayList;
@@ -57,8 +58,7 @@ public class Account {
 	@Column(name="modifiedDate")
 	private Date modifiedDate;
 	
-	@JsonManagedReference
-	@JsonIgnoreProperties("account")
+	@JsonIgnore
 	@OneToOne(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Applicant applicant;
 	
@@ -79,6 +79,11 @@ public class Account {
 	public Account(Long accNo2, String accHolderName2, Long aadhar2) {
 		this.aadhar = aadhar2;
 		this.accNo= accNo2;
+		this.accHolderName = accHolderName2;
+	}
+	
+	public Account(String accHolderName2, Long aadhar2) {
+		this.aadhar = aadhar2;
 		this.accHolderName = accHolderName2;
 	}
 	

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +16,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.DTO.AccountDTO;
+import com.example.demo.DTO.AccountResponseDTO;
 import com.example.demo.DTO.AllAccountDTO;
+import com.example.demo.DTO.CreateAccountDTO;
+import com.example.demo.DTO.ResponseApplicantDTO;
 import com.example.demo.entity.Account;
+import com.example.demo.entity.Applicant;
 import com.example.demo.exception.AccountAppException;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repo.AccountRepo;
@@ -35,11 +40,13 @@ public class AccountServiceImpl implements AccountService {
 
 	@Transactional
 	@Override
-	public void createAccount(AccountDTO accountDTO) {
-		Account account = new Account();
-		account.setAccHolderName(accountDTO.getAccHolderName());
-		account.setAadhar(accountDTO.getAadhar());
-		accountRepo.save(account);
+	public AccountDTO createAccount(CreateAccountDTO createAccountDTO) {
+		
+		Account account = mapper.map(createAccountDTO, Account.class);
+		account = accountRepo.save(account);
+		
+		return mapper.map(account, AccountDTO.class);
+		
 	}
 
 	@Transactional
@@ -67,12 +74,10 @@ public class AccountServiceImpl implements AccountService {
 		}
 	}
 	
-	//convert Post Entity to postResponseDTO
 	private AccountDTO mapAccountToAccountDTO(Account account) {
 		
-		Function<AccountDTO, Long> fun = (AccountDTO accDTO) -> accDTO.getAccNo();
 		AccountDTO accDTO = mapper.map(account, AccountDTO.class);
-		System.out.println(fun.apply(accDTO));
+
 		return accDTO;
 	}
 
@@ -80,20 +85,33 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public AccountDTO getAccountById(Long accountId) {
 		List<Account> accList = new ArrayList<>();
+		AccountDTO res = new AccountDTO();
 		Account account = accountRepo.findById(accountId).orElseThrow(()->new ResourceNotFoundException("Account","Account id",accountId));
-		accList.add(account);
-		return accList.stream().map((acc)-> new AccountDTO(acc.getAccNo(), acc.getAccHolderName(), acc.getAadhar())).collect(Collectors.toList()).get(0);
+		res.setAccNo(account.getAccNo());
+		res.setAccHolderName(account.getAccHolderName());
+		res.setAadhar(account.getAadhar());
+		
+		if(account.getApplicant()!=null) {
+			ResponseApplicantDTO app = new ResponseApplicantDTO();
+			app.setAge(account.getApplicant().getAge());
+			app.setDob(account.getApplicant().getDob());
+			app.setApplicantId(account.getApplicant().getApplicantId());
+			res.setApplicant(app);
+		}
+		return res;
 	}
 
 	@Transactional
 	@Override
-	public AccountDTO updateAccountById(AccountDTO accountDTO) {
-		List<AccountDTO> accDtoList = new ArrayList<>();
-		accDtoList.add(accountDTO);
-		Account accountDB = accountRepo.findById(accountDTO.getAccNo()).orElseThrow(()->new ResourceNotFoundException("Account","Account id",accountDTO.getAccNo()));
-		Account account = accDtoList.stream().map((acc)-> new Account(acc.getAccNo(), acc.getAccHolderName(), acc.getAadhar())).collect(Collectors.toList()).get(0);
-		accountRepo.save(account);
-		return accountDTO;
+	public AccountDTO updateAccountById(CreateAccountDTO createAccountDTO, Long accountId) {
+		
+		Account accountDB = accountRepo.findById(accountId).orElseThrow(()->new ResourceNotFoundException("Account","Account id",accountId));
+		
+		accountDB.setAccHolderName(createAccountDTO.getAccHolderName());
+		accountDB.setAadhar(createAccountDTO.getAadhar());
+		Account account = accountRepo.save(accountDB);
+		AccountDTO accDTO = mapper.map(account, AccountDTO.class);
+		return accDTO;
 	}
 
 	@Transactional
