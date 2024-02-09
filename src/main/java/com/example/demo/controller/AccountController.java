@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import java.security.Principal;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import com.example.demo.DTO.ResponseInfo;
 import com.example.demo.entity.Account;
 import com.example.demo.exception.ApplicationSqlException;
 import com.example.demo.service.AccountService;
+import com.example.demo.service.UserService;
 import com.example.demo.utils.AppConstants;
 import jakarta.validation.Valid;
 
@@ -35,6 +38,9 @@ public class AccountController {
 	
 	private static Logger log = LoggerFactory.getLogger(AccountController.class);
 
+	@Autowired
+	UserService userService;
+	
 	@Autowired
 	/*
 	 * The @Autowired annotation is used to inject the bean automatically.
@@ -63,12 +69,13 @@ public class AccountController {
 			@RequestParam(value="pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NO, required = false) int pageNo,
 			@RequestParam(value="pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
 			@RequestParam(value="sortBy", defaultValue = AppConstants.DEFAULT_PAGE_SORT_BY, required = false) String sortBy,
-			@RequestParam(value="ascDir", defaultValue = AppConstants.DEFAULT_PAGE_SORT_DIR, required = false) String ascDir
-			
+			@RequestParam(value="ascDir", defaultValue = AppConstants.DEFAULT_PAGE_SORT_DIR, required = false) String ascDir,
+			Principal p
 			){
 		ResponseInfo info = new ResponseInfo();
 		AllAccountDTO result = new AllAccountDTO();
 		try {
+			System.out.println(p.getName());
 			log.debug("Inside getAllAccount method");
 			result = accountService.getAllAccount(pageNo, pageSize, sortBy, ascDir);
 			info.setStatus("Success");

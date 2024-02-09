@@ -78,7 +78,7 @@ public class Account {
 
 	public Account(Long accNo2, String accHolderName2, Long aadhar2) {
 		this.aadhar = aadhar2;
-		this.accNo= accNo2;
+		this.accNo = accNo2;
 		this.accHolderName = accHolderName2;
 	}
 	
