@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.security.Principal;
 
+import com.example.demo.security.JwtHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,11 +50,17 @@ public class AccountController {
 	 */
 	AccountService accountService;
 
+
+	@Autowired
+	private JwtHelper helper;
+
 	
 	@PostMapping("/createAccountAPI")
-	public ResponseEntity<ResponseInfo> createAccount(@Valid @RequestBody CreateAccountDTO createAccountDTO){
+	public ResponseEntity<ResponseInfo> createAccount(@Valid @RequestBody CreateAccountDTO createAccountDTO, Principal p){
 		ResponseInfo info = new ResponseInfo();
+
 		try {
+			System.out.println(p.getName());
 			AccountDTO newAccount = accountService.createAccount(createAccountDTO);
 			info.setStatus("Sucess");
 			info.setMessage("Account has been created successfully with Account No: "+newAccount.getAccNo());
@@ -75,8 +82,6 @@ public class AccountController {
 		ResponseInfo info = new ResponseInfo();
 		AllAccountDTO result = new AllAccountDTO();
 		try {
-			System.out.println(p.getName());
-			log.debug("Inside getAllAccount method");
 			result = accountService.getAllAccount(pageNo, pageSize, sortBy, ascDir);
 			info.setStatus("Success");
 			info.setMessage("Account details has been fetched successfully.");
