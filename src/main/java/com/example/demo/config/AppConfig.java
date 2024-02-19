@@ -16,13 +16,15 @@ public class AppConfig {
 	
 		@Bean
 	    public UserDetailsService userDetailsService() {
-	        UserDetails userDetails = User.builder().
-	                username("piyush")
-	                .password(passwordEncoder().encode("piyush")).roles("ADMIN").
+	        UserDetails userDetails = User.builder()
+					.username("piyush")
+	                .password(passwordEncoder().encode("piyush"))
+					.roles("ADMIN").
 	                build();
-	        UserDetails userDetails1 = User.builder().
-	                username("PIYUSH1")
-	                .password(passwordEncoder().encode("PIYUSH1")).roles("ADMIN").
+	        UserDetails userDetails1 = User.builder()
+					.username("PIYUSH1")
+	                .password(passwordEncoder().encode("PIYUSH1"))
+					.roles("ADMIN").
 	                build();
 	        return new InMemoryUserDetailsManager(userDetails,userDetails1);
 	    }
