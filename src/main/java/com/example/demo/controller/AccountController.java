@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,18 +44,14 @@ public class AccountController {
 	UserService userService;
 	
 	@Autowired
-	/*
-	 * The @Autowired annotation is used to inject the bean automatically.
-	 * The @Autowired annotation is used in Constructor injection, Setter injection,
-	 * and Field injection.
-	 */
 	AccountService accountService;
 
 
 	@Autowired
 	private JwtHelper helper;
 
-	
+
+	@PreAuthorize("hasAuthority('CREATE')")
 	@PostMapping("/createAccountAPI")
 	public ResponseEntity<ResponseInfo> createAccount(@Valid @RequestBody CreateAccountDTO createAccountDTO, Principal p){
 		ResponseInfo info = new ResponseInfo();
@@ -70,7 +67,8 @@ public class AccountController {
 		}
 		return new ResponseEntity<ResponseInfo>(info, HttpStatus.CREATED);
 	}
-	
+
+	@PreAuthorize("hasAuthority('READ')")
 	@GetMapping("/getAllAccount")
 	public ResponseEntity<AllAccountDTO> getAllAccount(
 			@RequestParam(value="pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NO, required = false) int pageNo,
@@ -93,39 +91,8 @@ public class AccountController {
 		}
 		return new ResponseEntity<AllAccountDTO>(result, HttpStatus.OK);
 	}
-	
-	/*
-	 * Usage
-	 * 
-	 * @PathVariable: Extracts values from the URI path.
-	 * 
-	 * @RequestParam: Extracts values from query parameters. 
-	 * 
-	 * 
-	 * URL Example
-	 * 
-	 * @PathVariable: /books/{id} -> /books/5
-	 * 
-	 * @RequestParam: /books?bookId=5
-	 * 
-	 * Optional Values
-	 * 
-	 * @PathVariable: Assumes values are present (though you can set it as
-	 * optional).
-	 * 
-	 * @RequestParam: This can be optional or required. Default Values
-	 * 
-	 * @PathVariable: Does not support default values.
-	 * 
-	 * @RequestParam: Supports default values using the defaultValue attribute. Use
-	 * Case
-	 * 
-	 * @PathVariable: Suited for RESTful web services, where the URI is used to
-	 * indicate resource hierarchy.
-	 * 
-	 * @RequestParam: Commonly used in form submissions and traditional web
-	 * applications.
-	 */
+
+	@PreAuthorize("hasAuthority('READ')")
 	@GetMapping("/getAccount/{accountId}")
 	public ResponseEntity<AccountDTO> getAccountById(@PathVariable Long accountId){
 		
@@ -133,7 +100,8 @@ public class AccountController {
 		return new ResponseEntity<AccountDTO>(accDTO, HttpStatus.OK);
 		
 	}
-	
+
+	@PreAuthorize("hasAuthority('DELETE')")
 	@DeleteMapping("/deleteAccount/{accountId}")
 	public ResponseEntity<String> deleteAccountById(@PathVariable Long accountId){
 		
@@ -141,7 +109,8 @@ public class AccountController {
 		return new ResponseEntity<String>(msg, HttpStatus.OK);
 		
 	}
-	
+
+	@PreAuthorize("hasAuthority('UPDATE')")
 	@PutMapping("/updateAccount/{accountId}")
 	public ResponseEntity<AccountDTO> updateAccount(@RequestBody CreateAccountDTO createAccountDTO,
 			@PathVariable Long accountId){

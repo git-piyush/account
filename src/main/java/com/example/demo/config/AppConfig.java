@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,14 +18,14 @@ public class AppConfig {
 		@Bean
 	    public UserDetailsService userDetailsService() {
 	        UserDetails userDetails = User.builder()
-					.username("piyush")
-	                .password(passwordEncoder().encode("piyush"))
-					.roles("ADMIN").
+					.username("User")
+	                .password(passwordEncoder().encode("User"))
+					.roles("USER").authorities("READ").
 	                build();
 	        UserDetails userDetails1 = User.builder()
-					.username("PIYUSH1")
-	                .password(passwordEncoder().encode("PIYUSH1"))
-					.roles("ADMIN").
+					.username("Admin")
+	                .password(passwordEncoder().encode("Admin"))
+					.roles("ADMIN").authorities("READ","DELETE","UPDATE","CREATE").
 	                build();
 	        return new InMemoryUserDetailsManager(userDetails,userDetails1);
 	    }
